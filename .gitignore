@@ -31,3 +31,4 @@ hs_err_pid*
 !.gitconfig
 .idea/**
 cmake-build-debug/**
+out/
