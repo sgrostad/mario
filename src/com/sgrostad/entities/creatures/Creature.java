@@ -1,32 +1,32 @@
 package com.sgrostad.entities.creatures;
 
-import com.sgrostad.Game;
 import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
 import com.sgrostad.tiles.Tile;
 
 public abstract class Creature extends Entity{
-    public static final int DEFAULT_CREATURE_HEALTH = 10;
     public static final float DEFAULT_CREATURE_SPEED = 5.0f;
     public static final int DEFAULT_CREATURE_WIDTH = 64,
                             DEFAULT_CREATURE_HEIGHT = 64;
 
-    protected int health;
     protected float speed;
     protected float xMove;
     protected float yMove;
 
     public Creature(Handler handler, float x, float y, int width, int height) {
         super(handler, x, y, width, height);
-        health = DEFAULT_CREATURE_HEALTH;
         speed = DEFAULT_CREATURE_SPEED;
         xMove = 0;
         yMove = 0;
     }
 
     public void move(){
-        moveX();
-        moveY();
+        if (!checkEntityCollision(xMove,0f)) {
+            moveX();
+        }
+        if (!checkEntityCollision(0, yMove)) {
+            moveY();
+        }
     }
 
     public void moveX(){

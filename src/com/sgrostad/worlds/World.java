@@ -1,6 +1,10 @@
 package com.sgrostad.worlds;
 
 import com.sgrostad.Handler;
+import com.sgrostad.entities.EntityManager;
+import com.sgrostad.entities.creatures.Player;
+import com.sgrostad.entities.statics.Tree;
+import com.sgrostad.items.ItemManager;
 import com.sgrostad.tiles.Tile;
 import com.sgrostad.utils.Utils;
 
@@ -12,14 +16,25 @@ public class World {
     private int width, height;
     private int spawnX, spawnY;
     private int[][] worldTiles;
+    //Entities
+    private EntityManager entityManager;
+    //Item
+    private ItemManager itemManager;
+
 
     public World(Handler handler, String path) {
         this.handler = handler;
+        entityManager = new EntityManager(handler, new Player(handler,100,100));
+        itemManager = new ItemManager(handler);
         loadWorld(path);
+        entityManager.getPlayer().setX(spawnX);
+        entityManager.getPlayer().setY(spawnY);
+        entityManager.addEntity(new Tree(handler, 100, 200));
     }
 
     public void tick(){
-
+        entityManager.tick();
+        itemManager.tick();
     }
 
     public void render(Graphics g){
@@ -34,6 +49,10 @@ public class World {
                         (int)(y * Tile.TILE_HEIGHT - handler.getGameCamera().getyOffset()));
             }
         }
+        //Items
+        itemManager.render(g);
+        //Entities
+        entityManager.render(g);
     }
 
     public Tile getTile(int x, int y){
@@ -62,7 +81,7 @@ public class World {
         }
     }
 
-    // Getter and setters
+    // GETTERS SETTERS
 
 
     public int getWidth() {
@@ -79,5 +98,25 @@ public class World {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
+    public ItemManager getItemManager() {
+        return itemManager;
+    }
+
+    public void setItemManager(ItemManager itemManager) {
+        this.itemManager = itemManager;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 }

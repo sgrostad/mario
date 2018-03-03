@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 public class RockTile extends Tile {
 
     public RockTile(int id) {
-        super(Assets.icons.get(3), id);
+        super(Assets.icons.get(2), id);
     }
 
     @Override

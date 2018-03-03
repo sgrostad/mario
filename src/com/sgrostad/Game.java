@@ -4,6 +4,7 @@ import com.sgrostad.gfx.Assets;
 import com.sgrostad.display.Display;
 import com.sgrostad.gfx.GameCamera;
 import com.sgrostad.input.KeyManager;
+import com.sgrostad.input.MouseManager;
 import com.sgrostad.states.GameState;
 import com.sgrostad.states.MenuState;
 import com.sgrostad.states.State;
@@ -26,12 +27,12 @@ public class Game implements Runnable{
     private Graphics g;
 
     //Input
-
     private KeyManager keyManager;
+    private MouseManager mouseManager;
 
     //States:
-    private State gameState;
-    private State menuState;
+    public State gameState;
+    public State menuState;
 
     //Camera
     private GameCamera gameCamera;
@@ -44,17 +45,23 @@ public class Game implements Runnable{
         this.width = width;
         this.height = height;
         keyManager = new KeyManager();
+        mouseManager = new MouseManager();
     }
 
     private void init(){
         display = new Display(title, width, height);
         display.getFrame().addKeyListener(keyManager);
+        display.getCanvas().addKeyListener(keyManager);
+        display.getFrame().addMouseListener(mouseManager);
+        display.getFrame().addMouseMotionListener(mouseManager);
+        display.getCanvas().addMouseListener(mouseManager);
+        display.getCanvas().addMouseMotionListener(mouseManager);
         Assets.init();
         handler = new Handler(this);
         gameCamera = new GameCamera(handler, 0,0);
         gameState = new GameState(handler);
         menuState = new MenuState(handler);
-        State.setCurrentState(gameState);
+        State.setCurrentState(menuState);
     }
 
     private void tick(){
@@ -127,6 +134,10 @@ public class Game implements Runnable{
 
     public KeyManager getKeyManager() {
         return keyManager;
+    }
+
+    public MouseManager getMouseManager() {
+        return mouseManager;
     }
 
     public synchronized void stop(){

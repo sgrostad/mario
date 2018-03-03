@@ -9,14 +9,12 @@ public class Assets {
     public static List<BufferedImage> numbers;
     public static List<BufferedImage> icons;
 
-    public static List<BufferedImage> playerDown;
-    public static List<BufferedImage> playerUp;
-    public static List<BufferedImage> playerLeft;
-    public static List<BufferedImage> playerRight;
+    public static List<BufferedImage> playerDown, playerUp, playerLeft, playerRight;
+    public static List<BufferedImage> ghostDown, ghostUp, ghostLeft, ghostRight;
 
     public static void init(){
         numbers = initSpriteSheet("/textures/16x16.png",128,128,32,32);
-        icons = initSpriteSheet("/textures/16x16_icons.png",128,128,32,32);
+        icons = initSpriteSheet("/textures/16x16_icons.png",256,256,64,64);
         initPlayerAsset();
     }
     private static List<BufferedImage> initSpriteSheet(String filePath, int sheetWidth, int sheetHeight,
@@ -42,5 +40,13 @@ public class Assets {
         playerLeft = playerAnimations.subList(7, 13);
         playerRight = playerAnimations.subList(14,20);
         playerUp = playerAnimations.subList(21,27);
+    }
+    private static void initGhostAsset(){
+        List<BufferedImage> playerAnimations = initSpriteSheet("/textures/walking_ghost_man_224x256.png", 224,
+                256, 32, 64);
+        ghostDown = playerAnimations.subList(0, 6);
+        ghostLeft = playerAnimations.subList(7, 13);
+        ghostRight = playerAnimations.subList(14,20);
+        ghostUp = playerAnimations.subList(21,27);
     }
 }
