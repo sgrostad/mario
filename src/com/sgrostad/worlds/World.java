@@ -30,6 +30,8 @@ public class World {
         entityManager.getPlayer().setX(spawnX);
         entityManager.getPlayer().setY(spawnY);
         entityManager.addEntity(new Tree(handler, 100, 200));
+        entityManager.addEntity(new Tree(handler, 100, 300));
+        entityManager.addEntity(new Tree(handler, 100, 400));
     }
 
     public void tick(){

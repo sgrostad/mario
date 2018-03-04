@@ -1,10 +1,13 @@
 package com.sgrostad.gfx;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Assets {
+
+    public static Font font28;
 
     public static List<BufferedImage> numbers;
     public static List<BufferedImage> icons;
@@ -13,6 +16,7 @@ public class Assets {
     public static List<BufferedImage> ghostDown, ghostUp, ghostLeft, ghostRight;
 
     public static void init(){
+        font28 = FontLoader.loadFont("res/fonts/slkscr.ttf",28);
         numbers = initSpriteSheet("/textures/16x16.png",128,128,32,32);
         icons = initSpriteSheet("/textures/16x16_icons.png",256,256,64,64);
         initPlayerAsset();

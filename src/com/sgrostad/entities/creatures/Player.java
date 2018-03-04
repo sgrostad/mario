@@ -4,6 +4,7 @@ import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
+import com.sgrostad.inventory.Inventory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,6 +16,8 @@ public class Player extends Creature {
     private Animation animationDown, animationUp, animationLeft, animationRight;
     // Attack timer
     private long lastAttackTimer, attackCoolDown = 800, attackTimer = attackCoolDown;
+    // Inventory
+    private Inventory inventory;
 
 
     public Player(Handler handler, float x, float y) {
@@ -27,6 +30,8 @@ public class Player extends Creature {
         animationUp = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerUp);
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
+
+        inventory = new Inventory(handler);
     }
 
     @Override
@@ -41,6 +46,7 @@ public class Player extends Creature {
         handler.getGameCamera().centerOnEntity(this);
         // Attacks
         checkAttacks();
+        inventory.tick();
     }
 
     private void checkAttacks(){
@@ -104,6 +110,7 @@ public class Player extends Creature {
         */
         g.drawImage(getCurrentAnimationFrame(),(int)(x - handler.getGameCamera().getxOffset()),
                 (int)(y - handler.getGameCamera().getyOffset()), width, height,null);
+        inventory.render(g);
     }
 
     @Override
@@ -127,5 +134,12 @@ public class Player extends Creature {
         else {
             return animationDown.getFirstFrame();
         }
+    }
+
+    //GETTERS SETTERS
+
+
+    public Inventory getInventory() {
+        return inventory;
     }
 }
