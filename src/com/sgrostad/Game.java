@@ -9,6 +9,7 @@ import com.sgrostad.states.GameState;
 import com.sgrostad.states.MenuState;
 import com.sgrostad.states.State;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -44,14 +45,13 @@ public class Game implements Runnable{
         this.title = title;
         this.width = width;
         this.height = height;
-        keyManager = new KeyManager();
         mouseManager = new MouseManager();
     }
 
     private void init(){
         display = new Display(title, width, height);
-        display.getFrame().addKeyListener(keyManager);
-        display.getCanvas().addKeyListener(keyManager);
+        //display.getFrame().addKeyListener(keyManager);
+        //display.getCanvas().addKeyListener(keyManager);
         display.getFrame().addMouseListener(mouseManager);
         display.getFrame().addMouseMotionListener(mouseManager);
         display.getCanvas().addMouseListener(mouseManager);
@@ -62,10 +62,13 @@ public class Game implements Runnable{
         gameState = new GameState(handler);
         menuState = new MenuState(handler);
         State.setCurrentState(menuState);
+
+        //keyManager = new KeyManager(display.getComponent(), handler.getWorld().getEntityManager().getPlayer());
+        //keyManager.addPlayerMoves();
     }
 
     private void tick(){
-        keyManager.tick();
+        //keyManager.tick();
         if (State.getCurrentState() != null){
             State.getCurrentState().tick();
         }
@@ -174,5 +177,9 @@ public class Game implements Runnable{
 
     public GameCamera getGameCamera() {
         return gameCamera;
+    }
+
+    public JFrame getFrame() {
+        return display.getFrame();
     }
 }

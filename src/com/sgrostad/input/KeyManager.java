@@ -1,7 +1,46 @@
 package com.sgrostad.input;
 
+import com.sgrostad.Handler;
+import com.sgrostad.display.Display;
+import com.sgrostad.entities.creatures.Player;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+public class KeyManager {
+
+    private JComponent component;
+    private Player player;
+
+    public KeyManager(JComponent component, Player player){
+        this.component = component;
+        this.player = player;
+    }
+
+    public void addPlayerMoves(){
+        PlayerMoveAction leftMove = new PlayerMoveAction(player,"LEFT", -1, 0);
+        addKeyBinding(KeyEvent.VK_LEFT, "LEFT", leftMove);
+
+        PlayerMoveAction rightMove = new PlayerMoveAction(player,"RIGHT", 1, 0);
+        addKeyBinding(KeyEvent.VK_RIGHT, "RIGHT", rightMove);
+
+        PlayerMoveAction upMove = new PlayerMoveAction(player,"UP", 0, -1);
+        addKeyBinding(KeyEvent.VK_UP, "UP", upMove);
+
+        PlayerMoveAction downMove = new PlayerMoveAction(player,"DOWN", 0, 1);
+        addKeyBinding(KeyEvent.VK_DOWN, "DOWN", downMove);
+    }
+
+    public void addKeyBinding(int keyCode, String id, AbstractAction abstractAction){
+        KeyStroke pressedKeyStroke = KeyStroke.getKeyStroke(keyCode, 0, false);
+        InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = component.getActionMap();
+        inputMap.put(pressedKeyStroke, id);
+        actionMap.put(id, abstractAction);
+    }
+}
+/*
 
 public class KeyManager implements KeyListener {
     private boolean[] keys, justPressed, cantPress;
@@ -66,3 +105,4 @@ public class KeyManager implements KeyListener {
 
     }
 }
+*/

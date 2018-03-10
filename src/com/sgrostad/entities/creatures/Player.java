@@ -1,23 +1,35 @@
 package com.sgrostad.entities.creatures;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.Entity;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
+import com.sgrostad.input.KeyBinderCreator;
 import com.sgrostad.inventory.Inventory;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Player extends Creature {
 
-    public static final int MILLI_SEC_PER_PLAYER_FRAME = 80;
+    private static final int MILLI_SEC_PER_PLAYER_FRAME = 80;
+    private static final String PRESSED = "pressed ";
+    private static final String RELEASED = "released ";
+
     // Animations
     private Animation animationDown, animationUp, animationLeft, animationRight;
     // Attack timer
     private long lastAttackTimer, attackCoolDown = 800, attackTimer = attackCoolDown;
     // Inventory
     private Inventory inventory;
+    // Keys
+    private JComponent component;
+    private Map<String, Point> pressedKeys = new HashMap<String, Point>();
 
 
     public Player(Handler handler, float x, float y) {
@@ -30,11 +42,67 @@ public class Player extends Creature {
         animationUp = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerUp);
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
-
+        initPlayerKeys();
         inventory = new Inventory(handler);
     }
 
-    @Override
+    private void initPlayerKeys(){
+        component = new JPanel();
+        int tempSpeed = 4;
+        addAction("LEFT", -tempSpeed, 0);
+        addAction("RIGHT", tempSpeed, 0);
+        addAction("UP", 0, -tempSpeed);
+        addAction("DOWN", 0, tempSpeed);
+        handler.getGame().getFrame().add(component);
+    }
+
+    public void addAction(String keyStroke, int deltaX, int deltaY)
+    {
+        int offset = keyStroke.lastIndexOf(" ");
+        String key = offset == -1 ? keyStroke :  keyStroke.substring( offset + 1 );
+        String modifiers = keyStroke.replace(key, "");
+
+        InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = component.getActionMap();
+
+        Action pressedAction = new PlayerAction(key, new Point(deltaX, deltaY));
+        String pressedKey = modifiers + PRESSED + key;
+        KeyStroke pressedKeyStroke = KeyStroke.getKeyStroke(pressedKey);
+        inputMap.put(pressedKeyStroke, pressedKey);
+        actionMap.put(pressedKey, pressedAction);
+
+        Action releasedAction = new PlayerAction(key, null);
+        String releasedKey = modifiers + RELEASED + key;
+        KeyStroke releasedKeyStroke = KeyStroke.getKeyStroke(releasedKey);
+        inputMap.put(releasedKeyStroke, releasedKey);
+        actionMap.put(releasedKey, releasedAction);
+    }
+
+    private class PlayerAction extends AbstractAction implements ActionListener
+    {
+        private Point moveDelta;
+
+        public PlayerAction(String key, Point moveDelta)
+        {
+            super(key);
+
+            this.moveDelta = moveDelta;
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            handleKeyEvent((String)getValue(NAME), moveDelta);
+        }
+    }
+
+    private void handleKeyEvent(String key, Point moveDelta) {
+        if (moveDelta == null)
+            pressedKeys.remove(key);
+        else
+            pressedKeys.put(key, moveDelta);
+    }
+
+        @Override
     public void tick() {
         //Animation
         animationDown.tick();
@@ -49,7 +117,9 @@ public class Player extends Creature {
         inventory.tick();
     }
 
+
     private void checkAttacks(){
+        /*
         attackTimer += System.currentTimeMillis() - lastAttackTimer;
         lastAttackTimer = System.currentTimeMillis();
         if (attackTimer < attackCoolDown){
@@ -83,22 +153,15 @@ public class Player extends Creature {
                 e.hurt(1);
             }
         }
-        attackTimer = 0;
+        attackTimer = 0;*/
     }
     private void getInput(){
         yMove = 0;
         xMove = 0;
-        if (handler.getKeyManager().up){
-            yMove = -speed;
-        }
-        if (handler.getKeyManager().down){
-            yMove = speed;
-        }
-        if (handler.getKeyManager().left){
-            xMove = -speed;
-        }
-        if (handler.getKeyManager().right){
-            xMove = speed;
+        for (Point delta : pressedKeys.values())
+        {
+            xMove += delta.x;
+            yMove += delta.y;
         }
     }
 

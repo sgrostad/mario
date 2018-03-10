@@ -1,14 +1,18 @@
 package com.sgrostad.display;
 
-import javax.swing.JFrame;
+import com.sgrostad.input.PlayerMoveAction;
+import javafx.scene.input.KeyCode;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class Display {
 
     private JFrame frame;
     private String title;
     private int width, height;
-
 
     private Canvas canvas;
 
@@ -55,4 +59,5 @@ public class Display {
     public JFrame getFrame() {
         return frame;
     }
+
 }
