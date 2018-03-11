@@ -1,22 +1,28 @@
 package com.sgrostad.entities.creatures;
 
+import com.sgrostad.Game;
 import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
 import com.sgrostad.tiles.Tile;
 
 public abstract class Creature extends Entity{
-    public static final float DEFAULT_CREATURE_SPEED = 5.0f;
+    public static final float SECONDS_PAST_PER_MOVE = 1.0f / Game.FPS;
+    public static final float DEFAULT_CREATURE_SPEED = 5.0f, DEFAULT_GRAVITATION = 1000.0f;
     public static final int DEFAULT_CREATURE_WIDTH = 64,
                             DEFAULT_CREATURE_HEIGHT = 64;
 
-    protected float speed;
+    protected boolean lastDirectionRight = true;
+    protected boolean airborne = true;
+    protected float horizontalSpeed;
     protected float xMove;
+    protected float ySpeed;
     protected float yMove;
 
     public Creature(Handler handler, float x, float y, int width, int height) {
         super(handler, x, y, width, height);
-        speed = DEFAULT_CREATURE_SPEED;
+        horizontalSpeed = DEFAULT_CREATURE_SPEED;
         xMove = 0;
+        ySpeed = 0;
         yMove = 0;
     }
 
@@ -24,6 +30,8 @@ public abstract class Creature extends Entity{
         if (!checkEntityCollision(xMove,0f)) {
             moveX();
         }
+        ySpeed += DEFAULT_GRAVITATION * SECONDS_PAST_PER_MOVE;
+        yMove = ySpeed * SECONDS_PAST_PER_MOVE;
         if (!checkEntityCollision(0, yMove)) {
             moveY();
         }
@@ -61,6 +69,8 @@ public abstract class Creature extends Entity{
             }
             else {
                 y = tileY * Tile.TILE_HEIGHT - bounds.y - bounds.height - 1;
+                ySpeed = 0;
+                airborne = false;
             }
         }
         else if (yMove < 0){ //Moving up
@@ -68,9 +78,11 @@ public abstract class Creature extends Entity{
             if (!collisionWithTile((int) Math.floor((x + bounds.x) / Tile.TILE_WIDTH),tileY) &&
                     !collisionWithTile((int) Math.floor((x + bounds.x + bounds.width) / Tile.TILE_WIDTH), tileY)){
                 y += yMove;
+                airborne = true;
             }
             else {
                 y = tileY * Tile.TILE_HEIGHT + Tile.TILE_HEIGHT - bounds.y;
+                ySpeed = 0;
             }
         }
     }
@@ -106,11 +118,4 @@ public abstract class Creature extends Entity{
         this.health = health;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
 }

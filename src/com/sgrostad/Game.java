@@ -16,6 +16,11 @@ import java.awt.image.BufferStrategy;
 
 public class Game implements Runnable{
 
+    public static final double NANO_SEC_PER_SEC = 1000000000.0;
+    public static final double MICRO_SEC_PER_SEC = 1000000.0;
+    public static final double MILLI_SEC_PER_SEC = 1000.0;
+    public static final int FPS = 60;
+
     private Display display;
 
     private boolean running = false;
@@ -94,9 +99,7 @@ public class Game implements Runnable{
     @Override
     public void run() {
         init();
-        double nanoSecPerSec = 1000000000.0;
-        int fps = 60;
-        double timePerTick = nanoSecPerSec / fps;
+        double timePerTick = NANO_SEC_PER_SEC / FPS;
         double delta = 0;
         long now;
         long lastTime = System.nanoTime();
@@ -114,9 +117,9 @@ public class Game implements Runnable{
                 delta--;
                 ticks++;
             }
-            if (timer >= nanoSecPerSec){
+            if (timer >= NANO_SEC_PER_SEC){
                 System.out.println("Frames per second: " + ticks);
-                timer -= nanoSecPerSec;
+                timer -= NANO_SEC_PER_SEC;
                 ticks = 0;
             }
         }

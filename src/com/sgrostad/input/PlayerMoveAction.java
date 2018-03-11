@@ -21,7 +21,5 @@ public class PlayerMoveAction extends AbstractAction{
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Move: x = " + deltaX + ", y = " + deltaY);
-        player.setxMove(deltaX);
-        player.setyMove(deltaY);
     }
 }
