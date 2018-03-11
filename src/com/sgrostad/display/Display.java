@@ -1,12 +1,7 @@
 package com.sgrostad.display;
 
-import com.sgrostad.input.PlayerMoveAction;
-import javafx.scene.input.KeyCode;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 public class Display {
 

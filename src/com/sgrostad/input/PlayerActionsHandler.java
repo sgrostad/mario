@@ -1,4 +1,4 @@
-package com.sgrostad.entities.actions;
+package com.sgrostad.input;
 
 import com.sgrostad.Handler;
 import com.sgrostad.entities.creatures.Player;

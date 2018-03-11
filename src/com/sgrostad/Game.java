@@ -3,7 +3,6 @@ package com.sgrostad;
 import com.sgrostad.gfx.Assets;
 import com.sgrostad.display.Display;
 import com.sgrostad.gfx.GameCamera;
-import com.sgrostad.input.KeyManager;
 import com.sgrostad.input.MouseManager;
 import com.sgrostad.states.GameState;
 import com.sgrostad.states.MenuState;
@@ -33,7 +32,6 @@ public class Game implements Runnable{
     private Graphics g;
 
     //Input
-    private KeyManager keyManager;
     private MouseManager mouseManager;
 
     //States:
@@ -55,8 +53,6 @@ public class Game implements Runnable{
 
     private void init(){
         display = new Display(title, width, height);
-        //display.getFrame().addKeyListener(keyManager);
-        //display.getCanvas().addKeyListener(keyManager);
         display.getFrame().addMouseListener(mouseManager);
         display.getFrame().addMouseMotionListener(mouseManager);
         display.getCanvas().addMouseListener(mouseManager);
@@ -67,13 +63,9 @@ public class Game implements Runnable{
         gameState = new GameState(handler);
         menuState = new MenuState(handler);
         State.setCurrentState(menuState);
-
-        //keyManager = new KeyManager(display.getComponent(), handler.getWorld().getEntityManager().getPlayer());
-        //keyManager.addPlayerMoves();
     }
 
     private void tick(){
-        //keyManager.tick();
         if (State.getCurrentState() != null){
             State.getCurrentState().tick();
         }
@@ -136,10 +128,6 @@ public class Game implements Runnable{
         running = true;
         thread = new Thread(this);
         thread.start();
-    }
-
-    public KeyManager getKeyManager() {
-        return keyManager;
     }
 
     public MouseManager getMouseManager() {

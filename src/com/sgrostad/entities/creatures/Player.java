@@ -1,21 +1,14 @@
 package com.sgrostad.entities.creatures;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.actions.PlayerActionsHandler;
+import com.sgrostad.input.PlayerActionsHandler;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
-import com.sgrostad.input.KeyBinderCreator;
 import com.sgrostad.inventory.Inventory;
-import com.sgrostad.tiles.Tile;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class Player extends Creature {

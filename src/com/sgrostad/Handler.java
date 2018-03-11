@@ -1,7 +1,6 @@
 package com.sgrostad;
 
 import com.sgrostad.gfx.GameCamera;
-import com.sgrostad.input.KeyManager;
 import com.sgrostad.input.MouseManager;
 import com.sgrostad.worlds.World;
 
@@ -24,10 +23,6 @@ public class Handler {
 
     public GameCamera getGameCamera(){
         return game.getGameCamera();
-    }
-
-    public KeyManager getKeyManager(){
-        return game.getKeyManager();
     }
 
     public MouseManager getMouseManager(){return game.getMouseManager(); }
