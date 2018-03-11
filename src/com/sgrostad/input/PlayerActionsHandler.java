@@ -1,6 +1,7 @@
 package com.sgrostad.input;
 
 import com.sgrostad.Handler;
+import com.sgrostad.entities.creatures.Direction;
 import com.sgrostad.entities.creatures.Player;
 
 import javax.swing.*;
@@ -24,13 +25,13 @@ public class PlayerActionsHandler {
 
     public void initPlayerKeys(){
         component = new JLabel();
-        addMoveAction("LEFT", -1, 0);
-        addMoveAction("RIGHT", 1, 0);
-        addMoveAction("UP", 0, 1);
+        addMoveAction("LEFT", Direction.LEFT);
+        addMoveAction("RIGHT", Direction.RIGHT);
+        addMoveAction("UP", Direction.JUMP);
         handler.getGame().getFrame().add(component);
     }
 
-    public void addMoveAction(String keyStroke, int deltaX, int deltaY)
+    public void addMoveAction(String keyStroke, Direction direction)
     {
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke :  keyStroke.substring( offset + 1 );
@@ -39,13 +40,13 @@ public class PlayerActionsHandler {
         InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = component.getActionMap();
 
-        Action pressedAction = new PlayerAction(key, new Point(deltaX, deltaY));
+        Action pressedAction = new PlayerAction(key, direction);
         String pressedKey = modifiers + PRESSED + key;
         KeyStroke pressedKeyStroke = KeyStroke.getKeyStroke(pressedKey);
         inputMap.put(pressedKeyStroke, pressedKey);
         actionMap.put(pressedKey, pressedAction);
 
-        Action releasedAction = new PlayerAction(key, null);
+        Action releasedAction = new PlayerAction(key, Direction.STILL);
         String releasedKey = modifiers + RELEASED + key;
         KeyStroke releasedKeyStroke = KeyStroke.getKeyStroke(releasedKey);
         inputMap.put(releasedKeyStroke, releasedKey);
@@ -55,27 +56,27 @@ public class PlayerActionsHandler {
     private class PlayerAction extends AbstractAction implements ActionListener
     {
 
-        private Point moveDelta;
+        private Direction direction;
 
-        public PlayerAction(String key, Point moveDelta)
+        public PlayerAction(String key, Direction direction)
         {
             super(key);
 
-            this.moveDelta = moveDelta;
+            this.direction = direction;
         }
         public void actionPerformed(ActionEvent e)
         {
-            handleKeyEvent((String)getValue(NAME), moveDelta);
+            handleKeyEvent((String)getValue(NAME), direction);
         }
 
     }
 
-    private void handleKeyEvent(String key, Point moveDelta) {
-        if (moveDelta == null) {
+    private void handleKeyEvent(String key, Direction direction) {
+        if (direction.standingStill()) {
             player.removePressedKey(key);
         }
         else {
-            player.addPressedKey(key, moveDelta);
+            player.addPressedKey(key, direction);
         }
     }
 }
