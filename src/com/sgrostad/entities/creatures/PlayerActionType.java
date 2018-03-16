@@ -1,6 +1,6 @@
 package com.sgrostad.entities.creatures;
 
-public enum PlayerAction {
+public enum PlayerActionType {
     RIGHT, LEFT, STILL, JUMP;
 
     public boolean goingRight(){
@@ -31,7 +31,7 @@ public enum PlayerAction {
         return false;
     }
 
-    public PlayerAction opposite(){
+    public PlayerActionType opposite(){
         if (this == RIGHT){
             return LEFT;
         }

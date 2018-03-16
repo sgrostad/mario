@@ -15,7 +15,7 @@ public abstract class Creature extends Entity{
 
     protected boolean airborne = true;
     protected float horizontalMaxSpeed;
-    protected PlayerAction xDir;
+    protected PlayerActionType xDir;
     protected boolean facingRight;
     protected float xSpeed;
     protected float ySpeed;
@@ -23,7 +23,7 @@ public abstract class Creature extends Entity{
     public Creature(Handler handler, float x, float y, int width, int height) {
         super(handler, x, y, width, height);
         horizontalMaxSpeed = DEFAULT_CREATURE_SPEED;
-        xDir = PlayerAction.STILL;
+        xDir = PlayerActionType.STILL;
         xSpeed = 0;
         ySpeed = 0;
     }
@@ -153,7 +153,7 @@ public abstract class Creature extends Entity{
         }
     }
 
-    public void setxDir(PlayerAction xDir) {
+    public void setxDir(PlayerActionType xDir) {
         this.xDir = xDir;
     }
 

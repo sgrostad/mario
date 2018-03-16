@@ -25,7 +25,7 @@ public class Player extends Creature {
     private Inventory inventory;
     // Actions
     private PlayerActionsHandler playerActionsHandler; // TODO do class static?
-    private Map<String, PlayerAction> pressedKeys = new HashMap<>();
+    private Map<String, PlayerActionType> pressedKeys = new HashMap<>();
 
 
     public Player(Handler handler, float x, float y) {
@@ -96,7 +96,7 @@ public class Player extends Creature {
     private void getInput(){
         int tempXDir = 0;
         boolean wantToJump = false;
-        for (Map.Entry<String, PlayerAction> entry : pressedKeys.entrySet()){
+        for (Map.Entry<String, PlayerActionType> entry : pressedKeys.entrySet()){
             if (entry.getKey().equals("RIGHT") && !airborne){
                 tempXDir += 1;
             }
@@ -108,13 +108,13 @@ public class Player extends Creature {
             }
         }
         if (tempXDir > 0){
-            setxDir(PlayerAction.RIGHT);
+            setxDir(PlayerActionType.RIGHT);
         }
         else if (tempXDir < 0){
-            setxDir(PlayerAction.LEFT);
+            setxDir(PlayerActionType.LEFT);
         }
         else {
-            setxDir(PlayerAction.STILL);
+            setxDir(PlayerActionType.STILL);
         }
         if (wantToJump){
             makeJump();
@@ -165,15 +165,20 @@ public class Player extends Creature {
         }
     }
 
+    private void checkReleaseActions(String key){
+
+    }
+
     //GETTERS SETTERS
 
 
     public void removePressedKey(String key) {
+        checkReleaseActions(key);
         pressedKeys.remove(key);
     }
 
-    public void addPressedKey(String key, PlayerAction playerAction) {
-        pressedKeys.put(key, playerAction);
+    public void addPressedKey(String key, PlayerActionType playerActionType) {
+        pressedKeys.put(key, playerActionType);
     }
 
     public Inventory getInventory() {
