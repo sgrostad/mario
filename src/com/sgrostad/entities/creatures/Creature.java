@@ -13,17 +13,17 @@ public abstract class Creature extends Entity{
     public static final float DEFAULT_CREATURE_DECELERATION = DEFAULT_CREATURE_ACCELERATION / 5;
     public static final int DEFAULT_CREATURE_WIDTH = 64, DEFAULT_CREATURE_HEIGHT = 64;
 
-    protected boolean lastDirectionRight = true;
     protected boolean airborne = true;
     protected float horizontalMaxSpeed;
-    protected Direction xDir;
+    protected PlayerAction xDir;
+    protected boolean facingRight;
     protected float xSpeed;
     protected float ySpeed;
 
     public Creature(Handler handler, float x, float y, int width, int height) {
         super(handler, x, y, width, height);
         horizontalMaxSpeed = DEFAULT_CREATURE_SPEED;
-        xDir = Direction.STILL;
+        xDir = PlayerAction.STILL;
         xSpeed = 0;
         ySpeed = 0;
     }
@@ -72,7 +72,7 @@ public abstract class Creature extends Entity{
                     !collisionWithTile((int) Math.floor((x + bounds.x + bounds.width) / Tile.TILE_WIDTH), tileY)){
                 y += yMove;
             }
-            else {
+            else { //Landing
                 y = tileY * Tile.TILE_HEIGHT - bounds.y - bounds.height - 1;
                 ySpeed = 0;
                 airborne = false;
@@ -85,7 +85,7 @@ public abstract class Creature extends Entity{
                 y += yMove;
                 airborne = true;
             }
-            else {
+            else { //crashed in roof
                 y = tileY * Tile.TILE_HEIGHT + Tile.TILE_HEIGHT - bounds.y;
                 ySpeed = 0;
             }
@@ -97,6 +97,7 @@ public abstract class Creature extends Entity{
     }
 
     private float accelerateHorizontally(){
+        setFacingDirection();
         if (xDir.standingStill() && !airborne){
             xSpeed = 0;
             return 0;
@@ -110,6 +111,7 @@ public abstract class Creature extends Entity{
             }
             performAcceleration();
         }
+        setFacingDirection();
         return xSpeed * SECONDS_PAST_PER_MOVE;
     }
 
@@ -143,15 +145,15 @@ public abstract class Creature extends Entity{
 
     //Getter and setter:
 
+    private void setFacingDirection(){
+        if (xSpeed > 0){
+            facingRight = true;
+        }else if (xSpeed < 0) {
+            facingRight = false;
+        }
+    }
 
-    public void setxDir(Direction xDir) {
-        // TODO Check if this is correct solution
-        if (xDir.standingStill()){
-            lastDirectionRight = this.xDir.goingRight();
-        }
-        else {
-            lastDirectionRight = xDir.goingRight();
-        }
+    public void setxDir(PlayerAction xDir) {
         this.xDir = xDir;
     }
 

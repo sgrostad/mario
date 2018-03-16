@@ -1,11 +1,9 @@
 package com.sgrostad.input;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.Direction;
 import com.sgrostad.entities.creatures.Player;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,13 +23,13 @@ public class PlayerActionsHandler {
 
     public void initPlayerKeys(){
         component = new JLabel();
-        addMoveAction("LEFT", Direction.LEFT);
-        addMoveAction("RIGHT", Direction.RIGHT);
-        addMoveAction("UP", Direction.JUMP);
+        addMoveAction("LEFT", com.sgrostad.entities.creatures.PlayerAction.LEFT);
+        addMoveAction("RIGHT", com.sgrostad.entities.creatures.PlayerAction.RIGHT);
+        addMoveAction("UP", com.sgrostad.entities.creatures.PlayerAction.JUMP);
         handler.getGame().getFrame().add(component);
     }
 
-    public void addMoveAction(String keyStroke, Direction direction)
+    public void addMoveAction(String keyStroke, com.sgrostad.entities.creatures.PlayerAction playerAction)
     {
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke :  keyStroke.substring( offset + 1 );
@@ -40,13 +38,13 @@ public class PlayerActionsHandler {
         InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = component.getActionMap();
 
-        Action pressedAction = new PlayerAction(key, direction);
+        Action pressedAction = new PlayerAction(key, playerAction);
         String pressedKey = modifiers + PRESSED + key;
         KeyStroke pressedKeyStroke = KeyStroke.getKeyStroke(pressedKey);
         inputMap.put(pressedKeyStroke, pressedKey);
         actionMap.put(pressedKey, pressedAction);
 
-        Action releasedAction = new PlayerAction(key, Direction.STILL);
+        Action releasedAction = new PlayerAction(key, com.sgrostad.entities.creatures.PlayerAction.STILL);
         String releasedKey = modifiers + RELEASED + key;
         KeyStroke releasedKeyStroke = KeyStroke.getKeyStroke(releasedKey);
         inputMap.put(releasedKeyStroke, releasedKey);
@@ -56,27 +54,27 @@ public class PlayerActionsHandler {
     private class PlayerAction extends AbstractAction implements ActionListener
     {
 
-        private Direction direction;
+        private com.sgrostad.entities.creatures.PlayerAction playerAction;
 
-        public PlayerAction(String key, Direction direction)
+        public PlayerAction(String key, com.sgrostad.entities.creatures.PlayerAction playerAction)
         {
             super(key);
 
-            this.direction = direction;
+            this.playerAction = playerAction;
         }
         public void actionPerformed(ActionEvent e)
         {
-            handleKeyEvent((String)getValue(NAME), direction);
+            handleKeyEvent((String)getValue(NAME), playerAction);
         }
 
     }
 
-    private void handleKeyEvent(String key, Direction direction) {
-        if (direction.standingStill()) {
+    private void handleKeyEvent(String key, com.sgrostad.entities.creatures.PlayerAction playerAction) {
+        if (playerAction.standingStill()) {
             player.removePressedKey(key);
         }
         else {
-            player.addPressedKey(key, direction);
+            player.addPressedKey(key, playerAction);
         }
     }
 }

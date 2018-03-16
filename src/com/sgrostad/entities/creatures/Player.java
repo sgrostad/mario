@@ -15,6 +15,8 @@ public class Player extends Creature {
 
     private static final int MILLI_SEC_PER_PLAYER_FRAME = 80;
     private static final int DEFAULT_JUMP_SPEED = -400;
+    private static final int DEFAULT_STILL_JUMP_HORIZONTAL_SPEED = 150;
+
     // Animations
     private Animation animationLeft, animationRight;
     // Attack timer
@@ -23,7 +25,7 @@ public class Player extends Creature {
     private Inventory inventory;
     // Actions
     private PlayerActionsHandler playerActionsHandler; // TODO do class static?
-    private Map<String, Direction> pressedKeys = new HashMap<>();
+    private Map<String, PlayerAction> pressedKeys = new HashMap<>();
 
 
     public Player(Handler handler, float x, float y) {
@@ -93,7 +95,8 @@ public class Player extends Creature {
 
     private void getInput(){
         int tempXDir = 0;
-        for (Map.Entry<String, Direction> entry : pressedKeys.entrySet()){
+        boolean wantToJump = false;
+        for (Map.Entry<String, PlayerAction> entry : pressedKeys.entrySet()){
             if (entry.getKey().equals("RIGHT") && !airborne){
                 tempXDir += 1;
             }
@@ -101,23 +104,33 @@ public class Player extends Creature {
                 tempXDir -= 1;
             }
             else if (entry.getKey().equals("UP")){
-                makeJump(entry.getValue());
+                wantToJump = true;
             }
         }
         if (tempXDir > 0){
-            setxDir(Direction.RIGHT);
+            setxDir(PlayerAction.RIGHT);
         }
         else if (tempXDir < 0){
-            setxDir(Direction.LEFT);
+            setxDir(PlayerAction.LEFT);
         }
         else {
-            setxDir(Direction.STILL);
+            setxDir(PlayerAction.STILL);
+        }
+        if (wantToJump){
+            makeJump();
         }
     }
 
-    private void makeJump(Direction direction){
-        if (!airborne && direction.jumping()){
+    private void makeJump(){
+        if (!airborne){
             ySpeed = DEFAULT_JUMP_SPEED;
+            if (!xDir.standingStill() && Math.abs(xSpeed) < DEFAULT_STILL_JUMP_HORIZONTAL_SPEED){
+                if (xDir.goingRight()){
+                    xSpeed = DEFAULT_STILL_JUMP_HORIZONTAL_SPEED;
+                }else {
+                    xSpeed = -DEFAULT_STILL_JUMP_HORIZONTAL_SPEED;
+                }
+            }
         }
     }
 
@@ -138,7 +151,6 @@ public class Player extends Creature {
     }
 
     private BufferedImage getCurrentAnimationFrame(){
-        // TODO fix correct display of sprite
         if (xDir.goingLeft() && !airborne){
             return animationLeft.getCurrentFrame();
         }
@@ -146,7 +158,7 @@ public class Player extends Creature {
             return animationRight.getCurrentFrame();
         }
         else {
-            if (lastDirectionRight){
+            if (facingRight){
                 return animationRight.getFirstFrame();
             }
             return animationLeft.getFirstFrame();
@@ -158,19 +170,14 @@ public class Player extends Creature {
 
     public void removePressedKey(String key) {
         pressedKeys.remove(key);
-        /*if (key.equals("RIGHT")){
-            lastDirectionRight = true;
-        }
-        else if (key.equals("LEFT")){
-            lastDirectionRight = false;
-        }*/
     }
 
-    public void addPressedKey(String key, Direction direction) {
-        pressedKeys.put(key, direction);
+    public void addPressedKey(String key, PlayerAction playerAction) {
+        pressedKeys.put(key, playerAction);
     }
 
     public Inventory getInventory() {
         return inventory;
     }
+
 }
