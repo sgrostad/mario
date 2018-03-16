@@ -1,23 +1,31 @@
 package com.sgrostad.entities.creatures;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.Entity;
+import com.sgrostad.input.PlayerActionsHandler;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
 import com.sgrostad.inventory.Inventory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Player extends Creature {
 
-    public static final int MILLI_SEC_PER_PLAYER_FRAME = 80;
+    private static final int MILLI_SEC_PER_PLAYER_FRAME = 80;
+    private static final int DEFAULT_JUMP_SPEED = -400;
+    private static final int DEFAULT_STILL_JUMP_HORIZONTAL_SPEED = 150;
+
     // Animations
-    private Animation animationDown, animationUp, animationLeft, animationRight;
+    private Animation animationLeft, animationRight;
     // Attack timer
     private long lastAttackTimer, attackCoolDown = 800, attackTimer = attackCoolDown;
     // Inventory
     private Inventory inventory;
+    // Actions
+    private PlayerActionsHandler playerActionsHandler; // TODO do class static?
+    private Map<String, PlayerAction> pressedKeys = new HashMap<>();
 
 
     public Player(Handler handler, float x, float y) {
@@ -26,19 +34,16 @@ public class Player extends Creature {
         bounds.y = 8;
         bounds.width = 32;
         bounds.height = 54;
-        animationDown = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerDown);
-        animationUp = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerUp);
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
-
+        playerActionsHandler = new PlayerActionsHandler(this, handler);
+        playerActionsHandler.initPlayerKeys();
         inventory = new Inventory(handler);
     }
 
     @Override
     public void tick() {
         //Animation
-        animationDown.tick();
-        animationUp.tick();
         animationLeft.tick();
         animationRight.tick();
         getInput();
@@ -49,7 +54,9 @@ public class Player extends Creature {
         inventory.tick();
     }
 
+
     private void checkAttacks(){
+        /*
         attackTimer += System.currentTimeMillis() - lastAttackTimer;
         lastAttackTimer = System.currentTimeMillis();
         if (attackTimer < attackCoolDown){
@@ -83,22 +90,47 @@ public class Player extends Creature {
                 e.hurt(1);
             }
         }
-        attackTimer = 0;
+        attackTimer = 0;*/
     }
+
     private void getInput(){
-        yMove = 0;
-        xMove = 0;
-        if (handler.getKeyManager().up){
-            yMove = -speed;
+        int tempXDir = 0;
+        boolean wantToJump = false;
+        for (Map.Entry<String, PlayerAction> entry : pressedKeys.entrySet()){
+            if (entry.getKey().equals("RIGHT") && !airborne){
+                tempXDir += 1;
+            }
+            else if (entry.getKey().equals("LEFT") && !airborne){
+                tempXDir -= 1;
+            }
+            else if (entry.getKey().equals("UP")){
+                wantToJump = true;
+            }
         }
-        if (handler.getKeyManager().down){
-            yMove = speed;
+        if (tempXDir > 0){
+            setxDir(PlayerAction.RIGHT);
         }
-        if (handler.getKeyManager().left){
-            xMove = -speed;
+        else if (tempXDir < 0){
+            setxDir(PlayerAction.LEFT);
         }
-        if (handler.getKeyManager().right){
-            xMove = speed;
+        else {
+            setxDir(PlayerAction.STILL);
+        }
+        if (wantToJump){
+            makeJump();
+        }
+    }
+
+    private void makeJump(){
+        if (!airborne){
+            ySpeed = DEFAULT_JUMP_SPEED;
+            if (!xDir.standingStill() && Math.abs(xSpeed) < DEFAULT_STILL_JUMP_HORIZONTAL_SPEED){
+                if (xDir.goingRight()){
+                    xSpeed = DEFAULT_STILL_JUMP_HORIZONTAL_SPEED;
+                }else {
+                    xSpeed = -DEFAULT_STILL_JUMP_HORIZONTAL_SPEED;
+                }
+            }
         }
     }
 
@@ -119,27 +151,33 @@ public class Player extends Creature {
     }
 
     private BufferedImage getCurrentAnimationFrame(){
-        if (xMove < 0){
+        if (xDir.goingLeft() && !airborne){
             return animationLeft.getCurrentFrame();
         }
-        else if (xMove > 0){
+        else if (xDir.goingRight() && !airborne){
             return animationRight.getCurrentFrame();
         }
-        else if (yMove < 0){
-            return animationUp.getCurrentFrame();
-        }
-        else if (yMove > 0){
-            return animationDown.getCurrentFrame();
-        }
         else {
-            return animationDown.getFirstFrame();
+            if (facingRight){
+                return animationRight.getFirstFrame();
+            }
+            return animationLeft.getFirstFrame();
         }
     }
 
     //GETTERS SETTERS
 
 
+    public void removePressedKey(String key) {
+        pressedKeys.remove(key);
+    }
+
+    public void addPressedKey(String key, PlayerAction playerAction) {
+        pressedKeys.put(key, playerAction);
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
+
 }

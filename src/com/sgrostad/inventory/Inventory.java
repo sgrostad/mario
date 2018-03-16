@@ -20,13 +20,13 @@ public class Inventory {
     }
 
     public void tick(){
-        if (handler.getKeyManager().keyJustPressed(KeyEvent.VK_E)){
+        /*if (handler.getKeyManager().keyJustPressed(KeyEvent.VK_E)){
             active = !active;
         }
         if (!active){
             return;
-        }
-
+        }*/
+        //TODO fix with key bindings
     }
 
     public void render(Graphics g){

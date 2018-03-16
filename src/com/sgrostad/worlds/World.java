@@ -29,9 +29,9 @@ public class World {
         loadWorld(path);
         entityManager.getPlayer().setX(spawnX);
         entityManager.getPlayer().setY(spawnY);
-        entityManager.addEntity(new Tree(handler, 100, 200));
-        entityManager.addEntity(new Tree(handler, 100, 300));
-        entityManager.addEntity(new Tree(handler, 100, 400));
+        //entityManager.addEntity(new Tree(handler, 100, 200));
+        //entityManager.addEntity(new Tree(handler, 100, 300));
+        //entityManager.addEntity(new Tree(handler, 100, 400));
     }
 
     public void tick(){
@@ -71,8 +71,8 @@ public class World {
     private void loadWorld(String path){
         String file = Utils.loadFileAsString(path);
         String[] tokens = file.split("\\s+");
-        width = Utils.parseInt(tokens[0]);
-        height = Utils.parseInt(tokens[1]);
+        height = Utils.parseInt(tokens[0]);
+        width = Utils.parseInt(tokens[1]);
         spawnX = Utils.parseInt(tokens[2]);
         spawnY = Utils.parseInt(tokens[3]);
         worldTiles = new int[width][height];

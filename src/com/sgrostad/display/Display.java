@@ -1,6 +1,6 @@
 package com.sgrostad.display;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 
 public class Display {
@@ -8,7 +8,6 @@ public class Display {
     private JFrame frame;
     private String title;
     private int width, height;
-
 
     private Canvas canvas;
 
@@ -55,4 +54,5 @@ public class Display {
     public JFrame getFrame() {
         return frame;
     }
+
 }

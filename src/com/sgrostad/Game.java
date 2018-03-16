@@ -3,17 +3,22 @@ package com.sgrostad;
 import com.sgrostad.gfx.Assets;
 import com.sgrostad.display.Display;
 import com.sgrostad.gfx.GameCamera;
-import com.sgrostad.input.KeyManager;
 import com.sgrostad.input.MouseManager;
 import com.sgrostad.states.GameState;
 import com.sgrostad.states.MenuState;
 import com.sgrostad.states.State;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 
 public class Game implements Runnable{
+
+    public static final double NANO_SEC_PER_SEC = 1000000000.0;
+    public static final double MICRO_SEC_PER_SEC = 1000000.0;
+    public static final double MILLI_SEC_PER_SEC = 1000.0;
+    public static final int FPS = 60;
 
     private Display display;
 
@@ -27,7 +32,6 @@ public class Game implements Runnable{
     private Graphics g;
 
     //Input
-    private KeyManager keyManager;
     private MouseManager mouseManager;
 
     //States:
@@ -44,14 +48,11 @@ public class Game implements Runnable{
         this.title = title;
         this.width = width;
         this.height = height;
-        keyManager = new KeyManager();
         mouseManager = new MouseManager();
     }
 
     private void init(){
         display = new Display(title, width, height);
-        display.getFrame().addKeyListener(keyManager);
-        display.getCanvas().addKeyListener(keyManager);
         display.getFrame().addMouseListener(mouseManager);
         display.getFrame().addMouseMotionListener(mouseManager);
         display.getCanvas().addMouseListener(mouseManager);
@@ -65,7 +66,6 @@ public class Game implements Runnable{
     }
 
     private void tick(){
-        keyManager.tick();
         if (State.getCurrentState() != null){
             State.getCurrentState().tick();
         }
@@ -91,9 +91,7 @@ public class Game implements Runnable{
     @Override
     public void run() {
         init();
-        double nanoSecPerSec = 1000000000.0;
-        int fps = 60;
-        double timePerTick = nanoSecPerSec / fps;
+        double timePerTick = NANO_SEC_PER_SEC / FPS;
         double delta = 0;
         long now;
         long lastTime = System.nanoTime();
@@ -111,9 +109,9 @@ public class Game implements Runnable{
                 delta--;
                 ticks++;
             }
-            if (timer >= nanoSecPerSec){
+            if (timer >= NANO_SEC_PER_SEC){
                 System.out.println("Frames per second: " + ticks);
-                timer -= nanoSecPerSec;
+                timer -= NANO_SEC_PER_SEC;
                 ticks = 0;
             }
         }
@@ -130,10 +128,6 @@ public class Game implements Runnable{
         running = true;
         thread = new Thread(this);
         thread.start();
-    }
-
-    public KeyManager getKeyManager() {
-        return keyManager;
     }
 
     public MouseManager getMouseManager() {
@@ -174,5 +168,9 @@ public class Game implements Runnable{
 
     public GameCamera getGameCamera() {
         return gameCamera;
+    }
+
+    public JFrame getFrame() {
+        return display.getFrame();
     }
 }
