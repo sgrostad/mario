@@ -1,4 +1,4 @@
-package com.sgrostad.entities.creatures;
+package com.sgrostad.entities.creatures.player;
 
 public enum PlayerActionType {
     RIGHT, LEFT, STILL, JUMP;
@@ -41,6 +41,19 @@ public enum PlayerActionType {
         else {
             System.err.println(this.toString() + " does not have an opposite!");
             return STILL;
+        }
+    }
+
+    public static PlayerActionType keyToPlayerActionType(String key){
+        switch (key){
+            case "RIGHT":
+                return RIGHT;
+            case "LEFT":
+                return LEFT;
+            case "UP":
+                return JUMP;
+            default:
+                return STILL;
         }
     }
 

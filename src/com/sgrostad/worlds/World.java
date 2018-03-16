@@ -2,8 +2,7 @@ package com.sgrostad.worlds;
 
 import com.sgrostad.Handler;
 import com.sgrostad.entities.EntityManager;
-import com.sgrostad.entities.creatures.Player;
-import com.sgrostad.entities.statics.Tree;
+import com.sgrostad.entities.creatures.player.Player;
 import com.sgrostad.items.ItemManager;
 import com.sgrostad.tiles.Tile;
 import com.sgrostad.utils.Utils;

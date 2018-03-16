@@ -1,8 +1,8 @@
 package com.sgrostad.input;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.Player;
-import com.sgrostad.entities.creatures.PlayerActionType;
+import com.sgrostad.entities.creatures.player.Player;
+import com.sgrostad.entities.creatures.player.PlayerActionType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

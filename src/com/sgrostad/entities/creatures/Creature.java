@@ -3,6 +3,7 @@ package com.sgrostad.entities.creatures;
 import com.sgrostad.Game;
 import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
+import com.sgrostad.entities.creatures.player.PlayerActionType;
 import com.sgrostad.tiles.Tile;
 public abstract class Creature extends Entity{
     public static final float SECONDS_PAST_PER_MOVE = 1.0f / Game.FPS;
@@ -144,6 +145,11 @@ public abstract class Creature extends Entity{
     }
 
     //Getter and setter:
+
+
+    public boolean isAirborne() {
+        return airborne;
+    }
 
     private void setFacingDirection(){
         if (xSpeed > 0){
