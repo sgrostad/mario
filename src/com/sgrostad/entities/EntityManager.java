@@ -1,7 +1,7 @@
 package com.sgrostad.entities;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.Player;
+import com.sgrostad.entities.creatures.player.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
