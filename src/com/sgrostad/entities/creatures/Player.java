@@ -1,15 +1,17 @@
-package com.sgrostad.entities.creatures.player;
+package com.sgrostad.entities.creatures;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.Creature;
-import com.sgrostad.input.PlayerActionsHandler;
+import com.sgrostad.entities.Entity;
+import com.sgrostad.input.player.*;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
 import com.sgrostad.inventory.Inventory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Player extends Creature {
@@ -20,15 +22,11 @@ public class Player extends Creature {
 
     // Animations
     private Animation animationLeft, animationRight;
-    // Attack timer
-    private long lastAttackTimer, attackCoolDown = 800, attackTimer = attackCoolDown;
-    // Jump timer
-    private PlayerTakeOffTimer playerTakeOffTimer;
     // Inventory
     private Inventory inventory;
     // Actions
-    private PlayerActionsHandler playerActionsHandler; // TODO do class static?
-    private Map<String, PlayerActionType> pressedKeys = new HashMap<>();
+    private List<PlayerActions> playerActions = new ArrayList<>();
+    private Map<String, Direction> pressedKeys = new HashMap<>();
 
 
     public Player(Handler handler, float x, float y) {
@@ -39,10 +37,10 @@ public class Player extends Creature {
         bounds.height = 54;
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
-        playerActionsHandler = new PlayerActionsHandler(this, handler);
-        playerActionsHandler.initPlayerKeys();
+        playerActions.add(new PlayerHorizontalAction(handler));
+        playerActions.add(new PlayerJumpAction(handler, new PlayerTakeOffTimer(this)));
+        playerActions.add(new PlayerMeleeAction(handler));
         inventory = new Inventory(handler);
-        playerTakeOffTimer = new PlayerTakeOffTimer(this);
     }
 
     @Override
@@ -53,40 +51,26 @@ public class Player extends Creature {
         //Movement
         getInput();
         move();
-        playerTakeOffTimer.tick();
         handler.getGameCamera().centerOnEntity(this);
-        // Attacks
-        checkAttacks();
+        for (PlayerActions action : playerActions){
+            action.tick();
+        }
         inventory.tick();
     }
 
 
-    private void checkAttacks(){
-        /*
-        attackTimer += System.currentTimeMillis() - lastAttackTimer;
-        lastAttackTimer = System.currentTimeMillis();
-        if (attackTimer < attackCoolDown){
-            return;
-        }
+    public void meleeAttack(){
         Rectangle cb = getCollisionBounds(0,0);
         Rectangle aRange = new Rectangle();
         int aRangeSize = 20;
         aRange.width = aRangeSize;
         aRange.height = aRangeSize;
-        if (handler.getKeyManager().aUp){
-            aRange.x = cb.x + cb.width / 2 - aRangeSize / 2;
-            aRange.y = cb.y - aRangeSize;
-        }else if (handler.getKeyManager().aDown){
-            aRange.x = cb.x + cb.width / 2 - aRangeSize / 2;
-            aRange.y = cb.y + cb.height;
-        }else if (handler.getKeyManager().aLeft){
-            aRange.x = cb.x - aRangeSize;
-            aRange.y = cb.y + cb.height / 2 - aRangeSize / 2;
-        }else if (handler.getKeyManager().aRight){
+        if (facingRight){
             aRange.x = cb.x + cb.width;
             aRange.y = cb.y + cb.height / 2 - aRangeSize / 2;
-        }else {
-            return;
+        } else {
+            aRange.x = cb.x - aRangeSize;
+            aRange.y = cb.y + cb.height / 2 - aRangeSize / 2;
         }
         for (Entity e : handler.getWorld().getEntityManager().getEntities()){
             if (e.equals(this)){
@@ -96,12 +80,11 @@ public class Player extends Creature {
                 e.hurt(1);
             }
         }
-        attackTimer = 0;*/
     }
 
     private void getInput(){
         int tempXDir = 0;
-        for (Map.Entry<String, PlayerActionType> entry : pressedKeys.entrySet()){
+        for (Map.Entry<String, Direction> entry : pressedKeys.entrySet()){
             if (entry.getKey().equals("RIGHT") && !airborne){
                 tempXDir += 1;
             }
@@ -110,19 +93,18 @@ public class Player extends Creature {
             }
         }
         if (tempXDir > 0){
-            setxDir(PlayerActionType.RIGHT);
+            setxDir(Direction.RIGHT);
         }
         else if (tempXDir < 0){
-            setxDir(PlayerActionType.LEFT);
+            setxDir(Direction.LEFT);
         }
         else {
-            setxDir(PlayerActionType.STILL);
+            setxDir(Direction.STILL);
         }
 
     }
 
-    private void makeJump(){
-        float jumpForce = playerTakeOffTimer.getJumpForce();
+    public void makeJump(float jumpForce){
         if (jumpForce > 0) {
             ySpeed = DEFAULT_JUMP_SPEED * jumpForce;
             if (!xDir.standingStill() && Math.abs(xSpeed) < DEFAULT_STILL_JUMP_HORIZONTAL_SPEED) {
@@ -166,31 +148,15 @@ public class Player extends Creature {
         }
     }
 
-    private void checkReleaseActions(String key){
-        switch (PlayerActionType.keyToPlayerActionType(key)){
-            case JUMP:
-                makeJump();
-        }
-    }
-
-    private void checkPressedActions(String key){
-        switch (PlayerActionType.keyToPlayerActionType(key)){
-            case JUMP:
-                playerTakeOffTimer.prepareTakeOff();
-        }
-    }
-
     //GETTERS SETTERS
 
 
     public void removePressedKey(String key) {
-        checkReleaseActions(key);
         pressedKeys.remove(key);
     }
 
-    public void addPressedKey(String key, PlayerActionType playerActionType) {
-        checkPressedActions(key);
-        pressedKeys.put(key, playerActionType);
+    public void addPressedKey(String key, Direction direction) {
+        pressedKeys.put(key, direction);
     }
 
     public Inventory getInventory() {
