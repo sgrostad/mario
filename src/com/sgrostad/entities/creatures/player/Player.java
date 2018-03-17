@@ -122,10 +122,9 @@ public class Player extends Creature {
     }
 
     private void makeJump(){
-        if (!airborne) {
-            ySpeed = DEFAULT_JUMP_SPEED * playerTakeOffTimer.getJumpForce();
-            System.out.println("ySpeed = " + ySpeed);
-            System.out.println("percentage = " + playerTakeOffTimer.getJumpForce());
+        float jumpForce = playerTakeOffTimer.getJumpForce();
+        if (jumpForce > 0) {
+            ySpeed = DEFAULT_JUMP_SPEED * jumpForce;
             if (!xDir.standingStill() && Math.abs(xSpeed) < DEFAULT_STILL_JUMP_HORIZONTAL_SPEED) {
                 if (xDir.goingRight()) {
                     xSpeed = DEFAULT_STILL_JUMP_HORIZONTAL_SPEED;

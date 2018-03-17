@@ -37,11 +37,11 @@ public class PlayerTakeOffTimer {
     public float getJumpForce(){
         float jumpForce = 0;
         if (readyToJump){
-            System.out.println("PERCENTAGE = " + ((float)takeOffTimer / STANDARD_MILLI_SECONDS_FOR_MAX_JUMP));
             jumpForce = Math.min(1.0f,
                     STANDARD_MINIMUM_JUMP_PERCENTAGE + ((float)takeOffTimer / STANDARD_MILLI_SECONDS_FOR_MAX_JUMP) *
                             (1.0f - STANDARD_MINIMUM_JUMP_PERCENTAGE)); // between minimum jump and 1
         }
+        System.out.println("JumpForce = " + jumpForce);
         takeOffTimer = 0;
         wantToJump = false;
         readyToJump = false;
