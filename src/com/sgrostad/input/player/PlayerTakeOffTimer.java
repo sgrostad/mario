@@ -18,14 +18,6 @@ public class PlayerTakeOffTimer {
         readyToJump = false;
     }
 
-    public void prepareTakeOff(){
-        wantToJump = true;
-        if (!player.isAirborne()){
-            lastTime = System.currentTimeMillis();
-            readyToJump = true;
-        }
-    }
-
     public void tick(){
         if (wantToJump && !readyToJump && !player.isAirborne()){
             prepareTakeOff();
@@ -36,6 +28,27 @@ public class PlayerTakeOffTimer {
         }
     }
 
+    public void prepareTakeOff(){
+        wantToJump = true;
+        if (!player.isAirborne()){
+            lastTime = System.currentTimeMillis();
+            readyToJump = true;
+        }
+    }
+
+    public void resetTakeOff(){
+        takeOffTimer = 0;
+        wantToJump = false;
+        readyToJump = false;
+    }
+
+    public boolean isActive(){
+        if (takeOffTimer == 0){
+            return false;
+        }
+        return true;
+    }
+
     public float getJumpForce(){
         float jumpForce = 0;
         if (readyToJump){
@@ -43,9 +56,7 @@ public class PlayerTakeOffTimer {
                     STANDARD_MINIMUM_JUMP_PERCENTAGE + ((float)takeOffTimer / STANDARD_MILLI_SECONDS_FOR_MAX_JUMP) *
                             (1.0f - STANDARD_MINIMUM_JUMP_PERCENTAGE)); // between minimum jump and 1
         }
-        takeOffTimer = 0;
-        wantToJump = false;
-        readyToJump = false;
+        resetTakeOff();
         return jumpForce;
     }
 }
