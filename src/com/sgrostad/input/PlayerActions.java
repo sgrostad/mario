@@ -1,7 +1,6 @@
 package com.sgrostad.input;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.player.PlayerActionType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,15 +18,21 @@ public abstract class PlayerActions {
         initActions();
     }
 
+    protected abstract void addActions();
+    protected abstract void handleKeyEvent(String key, boolean pressed);
+
+    public void tick(){
+        //Standard = do nothing
+    }
+
     private void initActions(){
         component = new JLabel();
         addActions();
         handler.getGame().getFrame().add(component);
     }
 
-    protected abstract void addActions();
 
-    public void addAction(String keyStroke)
+    protected void addAction(String keyStroke)
     {
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke :  keyStroke.substring( offset + 1 );
@@ -63,7 +68,5 @@ public abstract class PlayerActions {
         }
 
     }
-
-    protected abstract void handleKeyEvent(String key, boolean pressed);
 
 }

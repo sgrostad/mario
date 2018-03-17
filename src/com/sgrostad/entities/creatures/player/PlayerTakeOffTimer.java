@@ -2,7 +2,7 @@ package com.sgrostad.entities.creatures.player;
 
 public class PlayerTakeOffTimer {
     private final float STANDARD_MINIMUM_JUMP_PERCENTAGE = 0.7f;
-    private final int STANDARD_MILLI_SECONDS_FOR_MAX_JUMP = 800;
+    private final int STANDARD_MILLI_SECONDS_FOR_MAX_JUMP = 600;
 
     private Player player;
     private long takeOffTimer, lastTime;
@@ -41,7 +41,6 @@ public class PlayerTakeOffTimer {
                     STANDARD_MINIMUM_JUMP_PERCENTAGE + ((float)takeOffTimer / STANDARD_MILLI_SECONDS_FOR_MAX_JUMP) *
                             (1.0f - STANDARD_MINIMUM_JUMP_PERCENTAGE)); // between minimum jump and 1
         }
-        System.out.println("JumpForce = " + jumpForce);
         takeOffTimer = 0;
         wantToJump = false;
         readyToJump = false;

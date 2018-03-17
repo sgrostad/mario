@@ -1,13 +1,11 @@
 package com.sgrostad.input;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.player.PlayerActionType;
+import com.sgrostad.entities.creatures.player.Direction;
 
-import javax.swing.*;
+public class PlayerHorizontalAction extends PlayerActions {
 
-public class PlayerActionsHandler extends PlayerActions {
-
-    public PlayerActionsHandler(Handler handler) {
+    public PlayerHorizontalAction(Handler handler) {
         super(handler);
     }
 
@@ -15,17 +13,16 @@ public class PlayerActionsHandler extends PlayerActions {
     protected void addActions(){
         addAction("LEFT");
         addAction("RIGHT");
-        addAction("UP");
     }
     
     @Override
     protected void handleKeyEvent(String key, boolean pressed) {
-        PlayerActionType playerActionType = PlayerActionType.keyToPlayerActionType(key);
+        Direction direction = Direction.keyToDirection(key);
         if (!pressed) {
             handler.getWorld().getEntityManager().getPlayer().removePressedKey(key);
         }
         else {
-            handler.getWorld().getEntityManager().getPlayer().addPressedKey(key, playerActionType);
+            handler.getWorld().getEntityManager().getPlayer().addPressedKey(key, direction);
         }
     }
 }

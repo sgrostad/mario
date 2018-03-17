@@ -3,7 +3,7 @@ package com.sgrostad.entities.creatures;
 import com.sgrostad.Game;
 import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
-import com.sgrostad.entities.creatures.player.PlayerActionType;
+import com.sgrostad.entities.creatures.player.Direction;
 import com.sgrostad.tiles.Tile;
 public abstract class Creature extends Entity{
     public static final float SECONDS_PAST_PER_MOVE = 1.0f / Game.FPS;
@@ -16,7 +16,7 @@ public abstract class Creature extends Entity{
 
     protected boolean airborne = true;
     protected float horizontalMaxSpeed;
-    protected PlayerActionType xDir;
+    protected Direction xDir;
     protected boolean facingRight;
     protected float xSpeed;
     protected float ySpeed;
@@ -24,7 +24,7 @@ public abstract class Creature extends Entity{
     public Creature(Handler handler, float x, float y, int width, int height) {
         super(handler, x, y, width, height);
         horizontalMaxSpeed = DEFAULT_CREATURE_SPEED;
-        xDir = PlayerActionType.STILL;
+        xDir = Direction.STILL;
         xSpeed = 0;
         ySpeed = 0;
     }
@@ -159,7 +159,7 @@ public abstract class Creature extends Entity{
         }
     }
 
-    public void setxDir(PlayerActionType xDir) {
+    public void setxDir(Direction xDir) {
         this.xDir = xDir;
     }
 

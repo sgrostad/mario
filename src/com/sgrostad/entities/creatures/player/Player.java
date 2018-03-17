@@ -2,14 +2,18 @@ package com.sgrostad.entities.creatures.player;
 
 import com.sgrostad.Handler;
 import com.sgrostad.entities.creatures.Creature;
-import com.sgrostad.input.PlayerActionsHandler;
+import com.sgrostad.input.PlayerActions;
+import com.sgrostad.input.PlayerHorizontalAction;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
+import com.sgrostad.input.PlayerJumpAction;
 import com.sgrostad.inventory.Inventory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Player extends Creature {
@@ -27,8 +31,8 @@ public class Player extends Creature {
     // Inventory
     private Inventory inventory;
     // Actions
-    private PlayerActionsHandler playerActionsHandler; // TODO do class static?
-    private Map<String, PlayerActionType> pressedKeys = new HashMap<>();
+    private List<PlayerActions> playerActions = new ArrayList<>();
+    private Map<String, Direction> pressedKeys = new HashMap<>();
 
 
     public Player(Handler handler, float x, float y) {
@@ -39,7 +43,8 @@ public class Player extends Creature {
         bounds.height = 54;
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
-        playerActionsHandler = new PlayerActionsHandler(handler);
+        playerActions.add(new PlayerHorizontalAction(handler));
+        playerActions.add(new PlayerJumpAction(handler));
         inventory = new Inventory(handler);
         playerTakeOffTimer = new PlayerTakeOffTimer(this);
     }
@@ -52,8 +57,10 @@ public class Player extends Creature {
         //Movement
         getInput();
         move();
-        playerTakeOffTimer.tick();
         handler.getGameCamera().centerOnEntity(this);
+        for (PlayerActions action : playerActions){
+            action.tick();
+        }
         // Attacks
         checkAttacks();
         inventory.tick();
@@ -100,7 +107,7 @@ public class Player extends Creature {
 
     private void getInput(){
         int tempXDir = 0;
-        for (Map.Entry<String, PlayerActionType> entry : pressedKeys.entrySet()){
+        for (Map.Entry<String, Direction> entry : pressedKeys.entrySet()){
             if (entry.getKey().equals("RIGHT") && !airborne){
                 tempXDir += 1;
             }
@@ -109,18 +116,18 @@ public class Player extends Creature {
             }
         }
         if (tempXDir > 0){
-            setxDir(PlayerActionType.RIGHT);
+            setxDir(Direction.RIGHT);
         }
         else if (tempXDir < 0){
-            setxDir(PlayerActionType.LEFT);
+            setxDir(Direction.LEFT);
         }
         else {
-            setxDir(PlayerActionType.STILL);
+            setxDir(Direction.STILL);
         }
 
     }
 
-    private void makeJump(){
+    public void makeJump(){
         float jumpForce = playerTakeOffTimer.getJumpForce();
         if (jumpForce > 0) {
             ySpeed = DEFAULT_JUMP_SPEED * jumpForce;
@@ -165,35 +172,22 @@ public class Player extends Creature {
         }
     }
 
-    private void checkReleaseActions(String key){
-        switch (PlayerActionType.keyToPlayerActionType(key)){
-            case JUMP:
-                makeJump();
-        }
-    }
-
-    private void checkPressedActions(String key){
-        switch (PlayerActionType.keyToPlayerActionType(key)){
-            case JUMP:
-                playerTakeOffTimer.prepareTakeOff();
-        }
-    }
-
     //GETTERS SETTERS
 
 
     public void removePressedKey(String key) {
-        checkReleaseActions(key);
         pressedKeys.remove(key);
     }
 
-    public void addPressedKey(String key, PlayerActionType playerActionType) {
-        checkPressedActions(key);
-        pressedKeys.put(key, playerActionType);
+    public void addPressedKey(String key, Direction direction) {
+        pressedKeys.put(key, direction);
     }
 
     public Inventory getInventory() {
         return inventory;
     }
 
+    public PlayerTakeOffTimer getPlayerTakeOffTimer() {
+        return playerTakeOffTimer;
+    }
 }

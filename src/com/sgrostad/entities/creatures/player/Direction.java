@@ -1,7 +1,7 @@
 package com.sgrostad.entities.creatures.player;
 
-public enum PlayerActionType {
-    RIGHT, LEFT, STILL, JUMP;
+public enum Direction {
+    RIGHT, LEFT, STILL;
 
     public boolean goingRight(){
         if (this == RIGHT){
@@ -24,14 +24,7 @@ public enum PlayerActionType {
         return false;
     }
 
-    public boolean jumping(){
-        if (this == JUMP){
-            return true;
-        }
-        return false;
-    }
-
-    public PlayerActionType opposite(){
+    public Direction opposite(){
         if (this == RIGHT){
             return LEFT;
         }
@@ -44,14 +37,12 @@ public enum PlayerActionType {
         }
     }
 
-    public static PlayerActionType keyToPlayerActionType(String key){
+    public static Direction keyToDirection(String key){
         switch (key){
             case "RIGHT":
                 return RIGHT;
             case "LEFT":
                 return LEFT;
-            case "UP":
-                return JUMP;
             default:
                 return STILL;
         }
@@ -66,8 +57,6 @@ public enum PlayerActionType {
                 return "LEFT";
             case RIGHT:
                 return "RIGHT";
-            case JUMP:
-                return "JUMP";
             default:
                 return "Wrong in enum toString";
         }
