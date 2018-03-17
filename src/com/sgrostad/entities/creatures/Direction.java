@@ -1,4 +1,4 @@
-package com.sgrostad.entities.creatures.player;
+package com.sgrostad.entities.creatures;
 
 public enum Direction {
     RIGHT, LEFT, STILL;

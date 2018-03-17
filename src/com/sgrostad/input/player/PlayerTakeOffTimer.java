@@ -1,4 +1,6 @@
-package com.sgrostad.entities.creatures.player;
+package com.sgrostad.input.player;
+
+import com.sgrostad.entities.creatures.Player;
 
 public class PlayerTakeOffTimer {
     private final float STANDARD_MINIMUM_JUMP_PERCENTAGE = 0.7f;

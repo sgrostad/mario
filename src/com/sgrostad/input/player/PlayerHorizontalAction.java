@@ -1,7 +1,8 @@
-package com.sgrostad.input;
+package com.sgrostad.input.player;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.player.Direction;
+import com.sgrostad.entities.creatures.Direction;
+import com.sgrostad.input.player.PlayerActions;
 
 public class PlayerHorizontalAction extends PlayerActions {
 

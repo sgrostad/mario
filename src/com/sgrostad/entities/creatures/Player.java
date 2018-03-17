@@ -1,12 +1,12 @@
-package com.sgrostad.entities.creatures.player;
+package com.sgrostad.entities.creatures;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.Creature;
-import com.sgrostad.input.PlayerActions;
-import com.sgrostad.input.PlayerHorizontalAction;
+import com.sgrostad.input.player.PlayerActions;
+import com.sgrostad.input.player.PlayerHorizontalAction;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
-import com.sgrostad.input.PlayerJumpAction;
+import com.sgrostad.input.player.PlayerJumpAction;
+import com.sgrostad.input.player.PlayerTakeOffTimer;
 import com.sgrostad.inventory.Inventory;
 
 import java.awt.*;
@@ -26,8 +26,6 @@ public class Player extends Creature {
     private Animation animationLeft, animationRight;
     // Attack timer
     private long lastAttackTimer, attackCoolDown = 800, attackTimer = attackCoolDown;
-    // Jump timer
-    private PlayerTakeOffTimer playerTakeOffTimer;
     // Inventory
     private Inventory inventory;
     // Actions
@@ -44,9 +42,8 @@ public class Player extends Creature {
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
         playerActions.add(new PlayerHorizontalAction(handler));
-        playerActions.add(new PlayerJumpAction(handler));
+        playerActions.add(new PlayerJumpAction(handler, new PlayerTakeOffTimer(this)));
         inventory = new Inventory(handler);
-        playerTakeOffTimer = new PlayerTakeOffTimer(this);
     }
 
     @Override
@@ -127,8 +124,7 @@ public class Player extends Creature {
 
     }
 
-    public void makeJump(){
-        float jumpForce = playerTakeOffTimer.getJumpForce();
+    public void makeJump(float jumpForce){
         if (jumpForce > 0) {
             ySpeed = DEFAULT_JUMP_SPEED * jumpForce;
             if (!xDir.standingStill() && Math.abs(xSpeed) < DEFAULT_STILL_JUMP_HORIZONTAL_SPEED) {
@@ -187,7 +183,4 @@ public class Player extends Creature {
         return inventory;
     }
 
-    public PlayerTakeOffTimer getPlayerTakeOffTimer() {
-        return playerTakeOffTimer;
-    }
 }

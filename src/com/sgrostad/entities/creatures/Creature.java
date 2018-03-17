@@ -3,7 +3,6 @@ package com.sgrostad.entities.creatures;
 import com.sgrostad.Game;
 import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
-import com.sgrostad.entities.creatures.player.Direction;
 import com.sgrostad.tiles.Tile;
 public abstract class Creature extends Entity{
     public static final float SECONDS_PAST_PER_MOVE = 1.0f / Game.FPS;

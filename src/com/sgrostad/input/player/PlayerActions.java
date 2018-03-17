@@ -1,4 +1,4 @@
-package com.sgrostad.input;
+package com.sgrostad.input.player;
 
 import com.sgrostad.Handler;
 
