@@ -1,12 +1,10 @@
 package com.sgrostad.entities.creatures;
 
 import com.sgrostad.Handler;
-import com.sgrostad.input.player.PlayerActions;
-import com.sgrostad.input.player.PlayerHorizontalAction;
+import com.sgrostad.entities.Entity;
+import com.sgrostad.input.player.*;
 import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
-import com.sgrostad.input.player.PlayerJumpAction;
-import com.sgrostad.input.player.PlayerTakeOffTimer;
 import com.sgrostad.inventory.Inventory;
 
 import java.awt.*;
@@ -24,8 +22,6 @@ public class Player extends Creature {
 
     // Animations
     private Animation animationLeft, animationRight;
-    // Attack timer
-    private long lastAttackTimer, attackCoolDown = 800, attackTimer = attackCoolDown;
     // Inventory
     private Inventory inventory;
     // Actions
@@ -43,6 +39,7 @@ public class Player extends Creature {
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
         playerActions.add(new PlayerHorizontalAction(handler));
         playerActions.add(new PlayerJumpAction(handler, new PlayerTakeOffTimer(this)));
+        playerActions.add(new PlayerMeleeAction(handler));
         inventory = new Inventory(handler);
     }
 
@@ -58,38 +55,22 @@ public class Player extends Creature {
         for (PlayerActions action : playerActions){
             action.tick();
         }
-        // Attacks
-        checkAttacks();
         inventory.tick();
     }
 
 
-    private void checkAttacks(){
-        /*
-        attackTimer += System.currentTimeMillis() - lastAttackTimer;
-        lastAttackTimer = System.currentTimeMillis();
-        if (attackTimer < attackCoolDown){
-            return;
-        }
+    public void meleeAttack(){
         Rectangle cb = getCollisionBounds(0,0);
         Rectangle aRange = new Rectangle();
         int aRangeSize = 20;
         aRange.width = aRangeSize;
         aRange.height = aRangeSize;
-        if (handler.getKeyManager().aUp){
-            aRange.x = cb.x + cb.width / 2 - aRangeSize / 2;
-            aRange.y = cb.y - aRangeSize;
-        }else if (handler.getKeyManager().aDown){
-            aRange.x = cb.x + cb.width / 2 - aRangeSize / 2;
-            aRange.y = cb.y + cb.height;
-        }else if (handler.getKeyManager().aLeft){
-            aRange.x = cb.x - aRangeSize;
-            aRange.y = cb.y + cb.height / 2 - aRangeSize / 2;
-        }else if (handler.getKeyManager().aRight){
+        if (facingRight){
             aRange.x = cb.x + cb.width;
             aRange.y = cb.y + cb.height / 2 - aRangeSize / 2;
-        }else {
-            return;
+        } else {
+            aRange.x = cb.x - aRangeSize;
+            aRange.y = cb.y + cb.height / 2 - aRangeSize / 2;
         }
         for (Entity e : handler.getWorld().getEntityManager().getEntities()){
             if (e.equals(this)){
@@ -99,7 +80,6 @@ public class Player extends Creature {
                 e.hurt(1);
             }
         }
-        attackTimer = 0;*/
     }
 
     private void getInput(){
