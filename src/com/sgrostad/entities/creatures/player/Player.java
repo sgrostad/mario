@@ -39,8 +39,7 @@ public class Player extends Creature {
         bounds.height = 54;
         animationLeft = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerLeft);
         animationRight = new Animation(MILLI_SEC_PER_PLAYER_FRAME, Assets.playerRight);
-        playerActionsHandler = new PlayerActionsHandler(this, handler);
-        playerActionsHandler.initPlayerKeys();
+        playerActionsHandler = new PlayerActionsHandler(handler);
         inventory = new Inventory(handler);
         playerTakeOffTimer = new PlayerTakeOffTimer(this);
     }
