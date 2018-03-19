@@ -32,6 +32,7 @@ public class World {
         entityManager.addEntity(new Tree(handler, 1300, 715));
         entityManager.addEntity(new Tree(handler, 1390, 715));
         entityManager.addEntity(new Tree(handler, 2200, 780));
+        entityManager.addEntity(new Tree(handler, 2300, 650));
     }
 
     public void tick(){
