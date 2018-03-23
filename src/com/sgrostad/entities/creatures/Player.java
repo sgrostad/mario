@@ -85,10 +85,10 @@ public class Player extends Creature {
     private void getInput(){
         int tempXDir = 0;
         for (Map.Entry<String, Direction> entry : pressedKeys.entrySet()){
-            if (entry.getKey().equals("RIGHT") && !airborne){
+            if (entry.getKey().equals("RIGHT")){
                 tempXDir += 1;
             }
-            else if (entry.getKey().equals("LEFT") && !airborne){
+            else if (entry.getKey().equals("LEFT")){
                 tempXDir -= 1;
             }
         }

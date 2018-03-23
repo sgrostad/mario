@@ -7,6 +7,11 @@ import java.awt.image.BufferedImage;
 public class GrassTile extends Tile{
 
     public GrassTile(int id) {
-        super(Assets.icons.get(1), id);
+        super(Assets.greenAndBrownTiles.get(2), id);
+    }
+
+    @Override
+    public boolean isSolid() {
+        return true;
     }
 }
