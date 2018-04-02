@@ -1,7 +1,7 @@
 package com.sgrostad.states;
 
 import com.sgrostad.Handler;
-import com.sgrostad.entities.creatures.Player;
+import com.sgrostad.entities.mobiles.Player;
 import com.sgrostad.worlds.World;
 
 import java.awt.*;

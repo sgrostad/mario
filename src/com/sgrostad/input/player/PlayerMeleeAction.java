@@ -29,7 +29,9 @@ public class PlayerMeleeAction extends PlayerActions {
     @Override
     protected void handleKeyEvent(String key, boolean pressed) {
         if (pressed && attackTimer >= attackCoolDown){
-            handler.getWorld().getEntityManager().getPlayer().meleeAttack();
+            handler.getWorld().getEntityManager().getPlayer().fireBullet();
+            //handler.getWorld().getEntityManager().getPlayer().meleeAttack();
+            lastAttackTimer = System.currentTimeMillis();
             attackTimer = 0;
         }
     }
