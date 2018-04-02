@@ -13,6 +13,7 @@ public class Assets {
     public static List<BufferedImage> icons;
     public static List<BufferedImage> greenAndBrownTiles;
     public static BufferedImage clearSky;
+    public static List<BufferedImage> machineGunBullet;
 
     public static List<BufferedImage> playerDown, playerUp, playerLeft, playerRight;
     public static List<BufferedImage> ghostDown, ghostUp, ghostLeft, ghostRight;
@@ -23,6 +24,8 @@ public class Assets {
         icons = initSpriteSheet("/textures/16x16_icons.png",256,256,64,64);
         greenAndBrownTiles = initSpriteSheet("/textures/green&brown_tiles.png", 630, 140, 70,70);
         clearSky = initSpriteSheet("/textures/clear_sky.png",70,70,70,70).get(0);
+        machineGunBullet = initSpriteSheet("/textures/machine_gun_bullet.png",136,22,68,22);
+
 
         initPlayerAsset();
     }
