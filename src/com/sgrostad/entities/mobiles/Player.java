@@ -177,9 +177,9 @@ public class Player extends MovableEntity {
     public void moveX(float xMove){
         boolean entityCollision = checkEntityCollision(xMove, 0f);
         if (xMove > 0){ //Moving right
-            int tileX = (int) Math.floor((x + xMove + bounds.x + bounds.width) / Tile.TILE_WIDTH);
-            if (!collisionWithTile(tileX, (int)Math.floor((y + bounds.y) / Tile.TILE_HEIGHT)) &&
-                    !collisionWithTile(tileX, (int)Math.floor((y + bounds.y + bounds.height) / Tile.TILE_HEIGHT)) &&
+            int tileX = (int) (x + xMove + bounds.x + bounds.width) / Tile.TILE_WIDTH;
+            if (!collisionWithTile(tileX, (int)(y + bounds.y) / Tile.TILE_HEIGHT) &&
+                    !collisionWithTile(tileX, (int)(y + bounds.y + bounds.height) / Tile.TILE_HEIGHT) &&
                     !entityCollision){
                 x += xMove;
             }
@@ -192,9 +192,9 @@ public class Player extends MovableEntity {
             }
         }
         else if (xMove < 0) { //Moving left
-            int tileX = (int) Math.floor((x + xMove + bounds.x) / Tile.TILE_WIDTH);
-            if (!collisionWithTile(tileX, (int)Math.floor((y + bounds.y) / Tile.TILE_HEIGHT)) &&
-                    !collisionWithTile(tileX, (int)Math.floor((y + bounds.y + bounds.height) / Tile.TILE_HEIGHT)) &&
+            int tileX = (int) (x + xMove + bounds.x) / Tile.TILE_WIDTH;
+            if (!collisionWithTile(tileX, (int)(y + bounds.y) / Tile.TILE_HEIGHT) &&
+                    !collisionWithTile(tileX, (int)(y + bounds.y + bounds.height) / Tile.TILE_HEIGHT) &&
                     !entityCollision){
                 x += xMove;
             }
@@ -211,9 +211,9 @@ public class Player extends MovableEntity {
     public void moveY(float yMove){
         boolean entityCollision = checkEntityCollision(0, yMove);
         if (yMove > 0){ //Moving down
-            int tileY = (int) Math.floor((y + yMove + bounds.y + bounds.height) / Tile.TILE_HEIGHT);
-            if (!collisionWithTile((int) Math.floor((x + bounds.x) / Tile.TILE_WIDTH),tileY) &&
-                    !collisionWithTile((int) Math.floor((x + bounds.x + bounds.width) / Tile.TILE_WIDTH), tileY) &&
+            int tileY = (int) (y + yMove + bounds.y + bounds.height) / Tile.TILE_HEIGHT;
+            if (!collisionWithTile((int)(x + bounds.x) / Tile.TILE_WIDTH,tileY) &&
+                    !collisionWithTile((int)(x + bounds.x + bounds.width) / Tile.TILE_WIDTH, tileY) &&
                     !entityCollision){
                 y += yMove;
             }
@@ -228,9 +228,9 @@ public class Player extends MovableEntity {
             }
         }
         else if (yMove < 0){ //Moving up
-            int tileY = (int) Math.floor((y + yMove + bounds.y) / Tile.TILE_HEIGHT);
-            if (!collisionWithTile((int) Math.floor((x + bounds.x) / Tile.TILE_WIDTH),tileY) &&
-                    !collisionWithTile((int) Math.floor((x + bounds.x + bounds.width) / Tile.TILE_WIDTH), tileY) &&
+            int tileY = (int)(y + yMove + bounds.y) / Tile.TILE_HEIGHT;
+            if (!collisionWithTile((int)(x + bounds.x) / Tile.TILE_WIDTH,tileY) &&
+                    !collisionWithTile((int)(x + bounds.x + bounds.width) / Tile.TILE_WIDTH, tileY) &&
                     !entityCollision){
                 y += yMove;
                 airborne = true;
