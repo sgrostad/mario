@@ -16,6 +16,7 @@ public class Assets {
 
     public static List<BufferedImage> greenAndBrownTiles;
     public static BufferedImage clearSky;
+    public static List<BufferedImage> sky;
     public static List<BufferedImage> machineGunBullet;
 
     public static List<BufferedImage> playerDown, playerUp, playerLeft, playerRight;
@@ -29,9 +30,10 @@ public class Assets {
         greenAndBrownTiles = initSpriteSheet("/textures/green&brown_tiles.png", 630, 140, 70,70);
         clearSky = initSpriteSheet("/textures/clear_sky.png",70,70,70,70).get(0);
         machineGunBullet = initSpriteSheet("/textures/machine_gun_bullet.png",136,22,68,22);
+        sky = initSpriteSheet("/textures/sky_5x230x130.png", 5*230, 130, 230, 130);
 
-        blackSmoke = initMultipleSprites("res/textures/black_smoke/blackSmoke", new Pair<>(0,24));
-        trees = initMultipleSprites("res/textures/trees/foliagePack_0", new Pair<>(0,61));
+        blackSmoke = initMultipleSprites("res/textures/black_smoke/blackSmoke", 0,24);
+        trees = initMultipleSprites("res/textures/trees/foliagePack_0", 0,61);
 
         initPlayerAsset();
     }
@@ -52,10 +54,10 @@ public class Assets {
         return bufferedImages;
     }
 
-    private static List<BufferedImage> initMultipleSprites(String filePath, Pair<Integer, Integer> range){
+    private static List<BufferedImage> initMultipleSprites(String filePath, int startValue, int endValue){
         List<BufferedImage> bufferedImages = new ArrayList<>();
         try {
-            for (int i = range.getKey(); i <= range.getValue(); i++){
+            for (int i = startValue; i <= endValue; i++){
                 bufferedImages.add(ImageIO.read(new File(filePath + i + ".png")));
             }
         } catch (IOException e){
@@ -80,4 +82,5 @@ public class Assets {
         ghostRight = playerAnimations.subList(14,20);
         ghostUp = playerAnimations.subList(21,27);
     }
+
 }

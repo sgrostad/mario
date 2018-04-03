@@ -11,8 +11,8 @@ public class Item {
     //Static
 
     public static Item[] items = new Item[256];
-    public static Item woodItem = new Item(Assets.trees.get(33),"Wood", 0); //TODO fix
-    public static Item rockItem = new Item(Assets.trees.get(53), "Rock", 1);//TODO fix
+    public static Item woodItem = new Item(Assets.trees.get(33),"Wood", 0);
+    public static Item rockItem = new Item(Assets.trees.get(53), "Rock", 1);
 
     //Class
 
