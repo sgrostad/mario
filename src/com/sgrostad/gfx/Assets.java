@@ -1,7 +1,12 @@
 package com.sgrostad.gfx;
 
+import javafx.util.Pair;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +14,6 @@ public class Assets {
 
     public static Font font28;
 
-    public static List<BufferedImage> numbers;
-    public static List<BufferedImage> icons;
     public static List<BufferedImage> greenAndBrownTiles;
     public static BufferedImage clearSky;
     public static List<BufferedImage> machineGunBullet;
@@ -18,17 +21,21 @@ public class Assets {
     public static List<BufferedImage> playerDown, playerUp, playerLeft, playerRight;
     public static List<BufferedImage> ghostDown, ghostUp, ghostLeft, ghostRight;
 
+    public static List<BufferedImage> blackSmoke;
+    public static List<BufferedImage> trees;
+
     public static void init(){
         font28 = FontLoader.loadFont("res/fonts/slkscr.ttf",28);
-        numbers = initSpriteSheet("/textures/16x16.png",128,128,32,32);
-        icons = initSpriteSheet("/textures/16x16_icons.png",256,256,64,64);
         greenAndBrownTiles = initSpriteSheet("/textures/green&brown_tiles.png", 630, 140, 70,70);
         clearSky = initSpriteSheet("/textures/clear_sky.png",70,70,70,70).get(0);
         machineGunBullet = initSpriteSheet("/textures/machine_gun_bullet.png",136,22,68,22);
 
+        blackSmoke = initMultipleSprites("res/textures/black_smoke/blackSmoke", new Pair<>(0,24));
+        trees = initMultipleSprites("res/textures/trees/foliagePack_0", new Pair<>(0,61));
 
         initPlayerAsset();
     }
+
     private static List<BufferedImage> initSpriteSheet(String filePath, int sheetWidth, int sheetHeight,
                                         int spriteWidth, int spriteHeight){
         if (sheetWidth % spriteWidth != 0 || sheetHeight % spriteHeight != 0){
@@ -41,6 +48,18 @@ public class Assets {
             for (int col = 0; col < sheetWidth/spriteWidth; col++){
                 bufferedImages.add(spriteSheet.crop(col*spriteWidth, row*spriteHeight, spriteWidth, spriteHeight));
             }
+        }
+        return bufferedImages;
+    }
+
+    private static List<BufferedImage> initMultipleSprites(String filePath, Pair<Integer, Integer> range){
+        List<BufferedImage> bufferedImages = new ArrayList<>();
+        try {
+            for (int i = range.getKey(); i <= range.getValue(); i++){
+                bufferedImages.add(ImageIO.read(new File(filePath + i + ".png")));
+            }
+        } catch (IOException e){
+            e.printStackTrace();
         }
         return bufferedImages;
     }

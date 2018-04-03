@@ -28,7 +28,7 @@ public class Tree extends StaticEntity {
         g.fillRect((int)(x + bounds.x - handler.getGameCamera().getxOffset()),
                 (int)(y + bounds.y - handler.getGameCamera().getyOffset()), bounds.width, bounds.height);
         */
-        g.drawImage(Assets.icons.get(3), (int)(x - handler.getGameCamera().getxOffset()),
+        g.drawImage(Assets.trees.get(10), (int)(x - handler.getGameCamera().getxOffset()),
                 (int) (y - handler.getGameCamera().getyOffset()), width, height, null);
     }
 

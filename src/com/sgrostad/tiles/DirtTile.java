@@ -7,6 +7,6 @@ import java.awt.image.BufferedImage;
 public class DirtTile extends Tile {
 
     public DirtTile(int id) {
-        super(Assets.icons.get(0), id);
+        super(Assets.greenAndBrownTiles.get(0), id); //TODO fix
     }
 }

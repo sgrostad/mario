@@ -1,7 +1,9 @@
 package com.sgrostad.entities.mobiles;
 
+import com.sgrostad.Game;
 import com.sgrostad.Handler;
 import com.sgrostad.entities.Entity;
+import com.sgrostad.gfx.Animation;
 import com.sgrostad.gfx.Assets;
 import com.sgrostad.tiles.Tile;
 
@@ -15,10 +17,17 @@ public class Bullet extends MovableEntity {
     private static final int STANDARD_BULLET_HURT = 3;
     public static final int STANDARD_BULLET_WIDTH = 8;
     public static final int STANDARD_BULLET_HEIGHT = 3;
+    public static final int STANDARD_SMOKE_ELEVATION_SPEED = 3;
+
+    private int bulletSmokeSize = 24;
+    private float smokeX, smokeY;
     private List<BufferedImage> bulletSprite;
+    private Animation bulletSmoke;
 
     public Bullet(Handler handler, float x, float y, Direction xDir) {
         super(handler, x, y, STANDARD_BULLET_WIDTH, STANDARD_BULLET_HEIGHT);
+        smokeX = x;
+        smokeY = y;
         this.xDir = xDir;
         bulletSprite = Assets.machineGunBullet;
         if (xDir.goingRight()) {
@@ -27,10 +36,14 @@ public class Bullet extends MovableEntity {
         else {
             xSpeed = -STANDARD_BULLET_SPEED;
         }
+        bulletSmoke = new Animation(1000/Game.FPS, Assets.blackSmoke);
     }
 
     @Override
     public void tick() {
+        bulletSmoke.tick();
+        bulletSmokeSize--;
+        smokeY -= STANDARD_SMOKE_ELEVATION_SPEED;
         move();
     }
 
@@ -38,6 +51,10 @@ public class Bullet extends MovableEntity {
     public void render(Graphics g) {
         g.drawImage(getBulletImage(),(int)(x - handler.getGameCamera().getxOffset()),
                 (int)(y - handler.getGameCamera().getyOffset()), width, height,null);
+        if (bulletSmokeSize > 0){
+            g.drawImage(bulletSmoke.getCurrentFrame(),(int)(smokeX - handler.getGameCamera().getxOffset()),
+                    (int)(smokeY - handler.getGameCamera().getyOffset()), bulletSmokeSize, bulletSmokeSize, null);
+        }
     }
 
     @Override

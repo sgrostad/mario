@@ -18,7 +18,7 @@ public class MenuState extends State {
         super(handler);
         uiManager = new UIManager(handler);
         handler.getMouseManager().setUiManager(uiManager);
-        BufferedImage arr[] = {Assets.icons.get(4), Assets.icons.get(5)};
+        BufferedImage arr[] = {Assets.playerLeft.get(0), Assets.playerLeft.get(0)}; //TODO fix
         uiManager.addObject(new UIImageButton(200, 200, 64, 64, arr, new ClickListener() {
             @Override
             public void onClick() {
